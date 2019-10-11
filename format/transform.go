@@ -61,6 +61,26 @@ const (
 	//   [foo :as x] ; if there is no x/y in the ns, this is removed
 	//   [foo :refer [x]] ; if x does not appear in the ns, this is removed
 	TransformRemoveUnusedRequires
+
+	// TransformOrganizeNS applies some standard ns organization not
+	// otherwise covered by other transformations:
+	//
+	//   - Use the order :refer-clojure, then :require, then :import
+	//   - Merge duplicate clauses
+	//   - Use the keywords for these rather than symbols (:require, not require)
+	//   - Use lists for these clauses
+	//   - Use vectors inside :require clauses
+	//   - Use lists inside :import clauses
+	//   - Put every :require-d namespace in a vector, even if there is no
+	//     :as or :refer
+	//   - Put :refer-d or :exclude-d symbols in a vector
+	//   - Start the contents of :require or :import on a new line after the
+	//     keyword
+	//   - When there is both :as and :refer, put :as first
+	//
+	// These style recommendations come "How to ns":
+	// https://stuartsierra.com/2016/clojure-how-to-ns.html.
+	TransformOrganizeNS
 )
 
 var DefaultTransforms = map[Transform]bool{
